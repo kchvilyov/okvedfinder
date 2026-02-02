@@ -3,6 +3,7 @@ package ru.okvedfinder.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.okvedfinder.domain.OkvedEntry;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -19,7 +20,9 @@ public class OkvedLoader {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
+        if (response.statusCode() != 200) {
+            throw new IOException("HTTP " + response.statusCode() + ": " + response.body());
+        }
         ObjectMapper mapper = new ObjectMapper();
         List<OkvedEntry> entries = mapper.readValue(response.body(),
                 mapper.getTypeFactory().constructCollectionType(List.class, OkvedEntry.class));
