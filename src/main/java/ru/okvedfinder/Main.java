@@ -12,21 +12,8 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-class OkvedEntry {
-    @JsonProperty("code") private String code;
-    @JsonProperty("name") private String name;
-
-    public OkvedEntry() {}
-
-    public OkvedEntry(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    public String getCode() { return code; }
-    public String getName() { return name; }
-}
+import ru.okvedfinder.domain.OkvedEntry;
+import ru.okvedfinder.service.OkvedLoader;
 
 public class Main {
     private static final Pattern RUS_MOBILE_PATTERN =
@@ -45,7 +32,8 @@ public class Main {
             System.out.println("✅ Normalized: " + normalized);
 
             // 2. Загрузка ОКВЭД
-            List<OkvedEntry> okvedList = loadOkved();
+            List<OkvedEntry> okvedList = OkvedLoader.load();
+
             System.out.println("✅ Loaded OKVED records: " + okvedList.size());
 
             // 3. Поиск
