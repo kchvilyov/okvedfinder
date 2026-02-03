@@ -1,4 +1,4 @@
-package com.okvedfinder;
+package ru.okvedfinder;
 
 import java.io.IOException;
 import java.net.URI;
