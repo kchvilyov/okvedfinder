@@ -1,33 +1,44 @@
 package ru.okvedfinder.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 public class OkvedEntry {
-    @JsonProperty("code")
     private String code;
-
-    @JsonProperty("name")
     private String name;
+    private List<OkvedEntry> items;
 
-    public OkvedEntry() {}
+    // 👉 Конструктор по умолчанию (нужен для Jackson)
+    public OkvedEntry() {
+    }
 
+    // Опционально: удобный конструктор для вашего кода
     public OkvedEntry(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public String getDigitsOnly() {
-        return code.replaceAll("\\D", "");
+    // Геттеры и сеттеры
+    public String getCode() {
+        return code;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s: %s", code, name);
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<OkvedEntry> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OkvedEntry> items) {
+        this.items = items;
     }
 }
