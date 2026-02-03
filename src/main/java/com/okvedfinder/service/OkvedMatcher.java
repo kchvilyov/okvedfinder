@@ -1,4 +1,4 @@
-package com.okvedfinder.service;
+package ru.okvedfinder.service;
 
 import ru.okvedfinder.domain.OkvedEntry;
 import ru.okvedfinder.domain.PhoneMatchResult;
