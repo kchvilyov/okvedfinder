@@ -51,7 +51,7 @@ mvn clean package
 ```
 ## Запуск
 ```bash
-java -jar target/okved-finder-1.0-SNAPSHOT-jar-with-dependencies.jar "8 (916) 123-45-67"
+java -jar target/okved-finder-1.0-SNAPSHOT.jar "8 (916) 765-43-21"
 ```
 ### Примеры
 ```bash
