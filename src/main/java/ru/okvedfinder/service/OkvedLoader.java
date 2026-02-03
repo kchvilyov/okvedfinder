@@ -2,6 +2,7 @@ package ru.okvedfinder.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.okvedfinder.domain.OkvedEntry;
+import ru.okvedfinder.exceptions.ValidationException;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,7 +21,7 @@ public class OkvedLoader {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
-            throw new RuntimeException("HTTP " + response.statusCode() + ": " + response.body());
+            throw new ValidationException("HTTP " + response.statusCode() + ": " + response.body());
         }
 
         ObjectMapper mapper = new ObjectMapper();
