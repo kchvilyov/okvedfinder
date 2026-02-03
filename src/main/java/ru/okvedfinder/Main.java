@@ -75,33 +75,73 @@ public class Main {
         OkvedEntry bestMatch = null;
         int maxLength = 0;
 
+        SearchResult result = searchBestMatch(entries, phoneDigits);
+
+        if (result.bestMatch == null) {
+            System.out.println("⚠️  No matches found, using default");
+            // Берём дефолтный по хэшу
+            int index = Math.abs(phone.hashCode()) % entries.size();
+            result.bestMatch = entries.get(index);
+            result.matchLength = 0;
+        }
+
+        System.out.printf("\n📱 Phone: %s\n", phone);
+        System.out.printf("📊 OKVED: %s — %s\n", result.bestMatch.getCode(), result.bestMatch.getName());
+        System.out.printf("🔢 Match length: %d\n", result.matchLength);
+    }
+
+    private static class SearchResult {
+        OkvedEntry bestMatch;
+        int matchLength;
+
+        SearchResult(OkvedEntry bestMatch, int matchLength) {
+            this.bestMatch = bestMatch;
+            this.matchLength = matchLength;
+        }
+    }
+
+    private static SearchResult searchBestMatch(List<OkvedEntry> entries, String phoneDigits) {
+        OkvedEntry bestMatch = null;
+        int maxLength = 0;
+
         for (OkvedEntry entry : entries) {
-            String codeDigits = entry.getCode().replaceAll("\\D", "");
+            SearchResult local = searchInEntry(entry, phoneDigits);
+            if (local.matchLength > maxLength) {
+                maxLength = local.matchLength;
+                bestMatch = local.bestMatch;
+            }
+        }
 
-            for (int len = Math.min(codeDigits.length(), phoneDigits.length());
-                 len > 0; len--) {
+        return new SearchResult(bestMatch, maxLength);
+    }
 
-                String phoneEnd = phoneDigits.substring(phoneDigits.length() - len);
-                String codeEnd = codeDigits.substring(codeDigits.length() - len);
+    private static SearchResult searchInEntry(OkvedEntry entry, String phoneDigits) {
+        String codeDigits = entry.getCode().replaceAll("\\D", "");
+        int currentMax = 0;
+        OkvedEntry bestMatch = null;
 
-                if (phoneEnd.equals(codeEnd) && len > maxLength) {
-                    bestMatch = entry;
-                    maxLength = len;
-                    break;
+        // Проверяем сам код
+        for (int len = Math.min(codeDigits.length(), phoneDigits.length()); len > 0; len--) {
+            String phoneEnd = phoneDigits.substring(phoneDigits.length() - len);
+            String codeEnd = codeDigits.substring(codeDigits.length() - len);
+            if (phoneEnd.equals(codeEnd) && len > currentMax) {
+                currentMax = len;
+                bestMatch = entry;
+                break; // переходим к следующей вложенности
+            }
+        }
+
+        // Рекурсивно проверяем вложенные items
+        if (entry.getItems() != null) {
+            for (OkvedEntry child : entry.getItems()) {
+                SearchResult childResult = searchInEntry(child, phoneDigits);
+                if (childResult.matchLength > currentMax) {
+                    currentMax = childResult.matchLength;
+                    bestMatch = childResult.bestMatch;
                 }
             }
         }
 
-        if (bestMatch != null) {
-            System.out.printf("\n📱 Phone: %s\n", phone);
-            System.out.printf("📊 OKVED: %s — %s\n",
-                    bestMatch.getCode(), bestMatch.getName());
-            System.out.printf("🔢 Match length: %d\n", maxLength);
-        } else {
-            System.out.println("\n⚠️  No matches found, using default");
-            System.out.printf("📱 Phone: %s\n", phone);
-            System.out.println("📊 OKVED: 99.99 — Activity not determined");
-            System.out.println("🔢 Match length: 0");
-        }
+        return new SearchResult(bestMatch, currentMax);
     }
 }
