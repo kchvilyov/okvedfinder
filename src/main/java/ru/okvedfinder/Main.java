@@ -1,23 +1,11 @@
 package ru.okvedfinder;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.okvedfinder.domain.OkvedEntry;
 import ru.okvedfinder.service.OkvedLoader;
 
 public class Main {
-    private static final Pattern RUS_MOBILE_PATTERN =
-            Pattern.compile("^\\+?7[9|8]\\d{9}$");
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -60,20 +48,8 @@ public class Main {
         return "+" + digits;
     }
 
-    private static List<OkvedEntry> loadOkved() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        try (var inputStream = Main.class.getClassLoader().getResourceAsStream("okved.json")) {
-            if (inputStream == null) {
-                throw new IOException("okved.json not found in resources");
-            }
-            return mapper.readValue(inputStream, new TypeReference<List<OkvedEntry>>() {});
-        }
-    }
-
     private static void findAndPrintMatch(String phone, List<OkvedEntry> entries) {
         String phoneDigits = phone.replaceAll("\\D", "");
-        OkvedEntry bestMatch = null;
-        int maxLength = 0;
 
         SearchResult result = searchBestMatch(entries, phoneDigits);
 
@@ -124,7 +100,7 @@ public class Main {
         for (int len = Math.min(codeDigits.length(), phoneDigits.length()); len > 0; len--) {
             String phoneEnd = phoneDigits.substring(phoneDigits.length() - len);
             String codeEnd = codeDigits.substring(codeDigits.length() - len);
-            if (phoneEnd.equals(codeEnd) && len > currentMax) {
+            if (phoneEnd.equals(codeEnd)) {
                 currentMax = len;
                 bestMatch = entry;
                 break; // переходим к следующей вложенности
