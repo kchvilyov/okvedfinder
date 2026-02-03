@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class OkvedLoader {
-    private static final String OKVED_URL = "https://github.com/bergstar/testcase/blob/master/okved.json";
+    private static final String OKVED_URL = "https://raw.githubusercontent.com/bergstar/testcase/master/okved.json";
 
     public static List<OkvedEntry> load() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
