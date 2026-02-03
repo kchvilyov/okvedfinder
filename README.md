@@ -57,9 +57,9 @@ java -jar target/okved-finder-1.0-SNAPSHOT-jar-with-dependencies.jar "8 (916) 12
 ```
 ### Примеры
 ```bash
-java -jar target/okved-finder-1.0-SNAPSHOT-jar-with-dependencies.jar "+7 (916) 123-45-67"
-java -jar target/okved-finder-1.0-SNAPSHOT-jar-with-dependencies.jar "79161234567"
-java -jar target/okved-finder-1.0-SNAPSHOT-jar-with-dependencies.jar "8(916)123-45-67"
+java -jar target/okved-finder-1.0-SNAPSHOT.jar "8 (916) 123-45-67"
+java -jar target/okved-finder-1.0-SNAPSHOT.jar "79161234567"
+java -jar target/okved-finder-1.0-SNAPSHOT.jar "8(916)123-45-67"
 ```
 ## Последовательность работы
 Номер телефона нормализуется в формат +79XXXXXXXXX.
